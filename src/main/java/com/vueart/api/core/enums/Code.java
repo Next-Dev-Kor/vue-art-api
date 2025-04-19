@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Code {
 
+    public enum YN {
+        Y,
+        N
+    }
+
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ApiResponseCode {
         SUCCESS(200, "S001", "success"),

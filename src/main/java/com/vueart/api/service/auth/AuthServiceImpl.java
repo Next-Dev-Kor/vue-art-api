@@ -37,6 +37,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(req.email())
                 .userName(req.userName())
                 .password(passwordEncoder.encode(aes256Util.decode(req.password())))
+                .business(Code.YN.N)
+                .region(req.region())
                 .build();
         userRepository.save(user);
     }

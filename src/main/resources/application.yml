@@ -37,7 +37,7 @@ spring:
     hikari:
       maximum-pool-size: 10
   jpa:
-    database: mysql
+    database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
@@ -108,7 +108,7 @@ spring:
     hikari:
       maximum-pool-size: 10
   jpa:
-    database: mysql
+    database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:

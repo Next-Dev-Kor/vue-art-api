@@ -8,5 +8,7 @@ public record SignUpRequest(
         @NotNull(message = "userName은 필수입니다.")
         String userName,
         @NotNull(message = "password는 필수입니다.")
-        String password) {
+        String password,
+        @NotNull(message = "region은 필수입니다.")
+        String region) {
 }

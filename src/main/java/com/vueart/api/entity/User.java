@@ -1,6 +1,7 @@
 package com.vueart.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vueart.api.core.enums.Code;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -31,12 +32,23 @@ public class User extends BaseEntity{
     @Column(name = "email")
     private String email;
 
+    @NotNull
+    @Column(name = "business", length = 1)
+    @Enumerated(EnumType.STRING)
+    private Code.YN business;
+
+    @NotNull
+    @Column(name = "region")
+    private String region;
+
     @Builder
-    public User(Long id, String password, String userName, String email){
+    public User(Long id, String password, String userName, String email, Code.YN business, String region) {
         this.id = id;
         this.password = password;
         this.userName = userName;
         this.email = email;
+        this.business = business;
+        this.region = region;
     }
 
     public User updatePassword(Long id, String password){
