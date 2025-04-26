@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 public record SignUpRequest(
         @NotNull(message = "email은 필수입니다.")
         String email,
-        @NotNull(message = "userName은 필수입니다.")
-        String userName,
+        @NotNull(message = "userId은 필수입니다.")
+        String userId,
         @NotNull(message = "password는 필수입니다.")
         String password) {
 }
