@@ -19,8 +19,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
         Category category = Category.builder()
-                .categoryName(request.getCategoryNam:q
-    e())
+                .categoryName(request.getCategoryName())
                 .build();
         Category saved = categoryRepository.save(category);
         return new CategoryResponse(saved.getCategoryId(), saved.getCategoryName());

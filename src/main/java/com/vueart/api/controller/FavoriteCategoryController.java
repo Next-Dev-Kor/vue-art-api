@@ -2,11 +2,18 @@ package com.vueart.api.controller;
 
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
+import com.vueart.api.dto.request.category.CategoryRequest;
 import com.vueart.api.dto.request.favorite.AddFavoriteCategoryRequest;
+import com.vueart.api.dto.response.category.CategoryResponse;
+import com.vueart.api.entity.FavoriteCategory;
 import com.vueart.api.service.favorite.FavoriteCategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.webauthn.management.MapUserCredentialRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +23,27 @@ public class FavoriteCategoryController {
 
     private final FavoriteCategoryService favoriteCategoryService;
 
-    @PostMapping("/add")
-    public SuccessResponse addFavoriteCategories(@RequestBody AddFavoriteCategoryRequest request) {
-        favoriteCategoryService.addFavoriteCategories(request);
-        return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
+    @PostMapping("/{userId}/{categoryId}")
+    public SuccessResponse addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
+        return favoriteCategoryService.addFavoriteCategory(userId, categoryId);
+
+    }
+
+    @PostMapping("/{userId}")
+    public SuccessResponse addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
+        return favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
+
+    }
+
+    @GetMapping("/{userId}")
+    public  List<CategoryResponse> getFavoriteCategoryById(@PathVariable Long userId) {
+
+        return favoriteCategoryService.getFavoriteCategoryByUserId(userId);
+    
+    }
+
+    @DeleteMapping("/{userId}/{categoryId}")
+    public void deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
+        favoriteCategoryService.deleteByUserIdAndCategoryId(userId, categoryId);
     }
 }
