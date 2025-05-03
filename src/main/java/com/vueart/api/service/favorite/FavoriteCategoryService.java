@@ -1,8 +1,6 @@
 package com.vueart.api.service.favorite;
 
 import com.vueart.api.common.response.SuccessResponse;
-import com.vueart.api.dto.request.category.CategoryRequest;
-import com.vueart.api.dto.request.favorite.AddFavoriteCategoryRequest;
 import com.vueart.api.dto.response.category.CategoryResponse;
 
 import java.util.List;

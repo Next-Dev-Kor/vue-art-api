@@ -1,21 +1,10 @@
 package com.vueart.api.service.notification;
 
-import com.vueart.api.dto.response.category.NotificationResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
+import com.vueart.api.dto.response.notification.NotificationResponse;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class NotificationService {
-    public void markAsRead(String id) {
-    }
-
-    public List<NotificationResponse> getNotifications(String userId, boolean onlyUnread) {
-        return List.of();
-    }
-
-    public void markAllAsRead(String userId) {
-    }
+public interface NotificationService {
+    List<NotificationResponse> getNotifications(String userId, boolean onlyUnread);
+    void markAsRead(String id);
+    void markAllAsRead(String userId);
 }

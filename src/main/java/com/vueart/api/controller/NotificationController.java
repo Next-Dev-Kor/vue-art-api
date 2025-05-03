@@ -1,6 +1,6 @@
 package com.vueart.api.controller;
 
-import com.vueart.api.dto.response.category.NotificationResponse;
+import com.vueart.api.dto.response.notification.NotificationResponse;
 import com.vueart.api.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/favorites/categories/**").permitAll()
                                 .requestMatchers("/api/category/**").permitAll()
                                 .requestMatchers("/api/subscriptions/**").permitAll()
+                                .requestMatchers("/api/notifications/**").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(authenticationManager -> authenticationManager

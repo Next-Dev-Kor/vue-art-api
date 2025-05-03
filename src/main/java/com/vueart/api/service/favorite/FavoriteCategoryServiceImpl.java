@@ -11,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vueart.api.dto.request.favorite.AddFavoriteCategoryRequest;
 import com.vueart.api.entity.FavoriteCategory;
 import com.vueart.api.repository.favorite.FavoriteCategoryRepository;
 import com.vueart.api.repository.category.CategoryRepository;
 import com.vueart.api.repository.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
