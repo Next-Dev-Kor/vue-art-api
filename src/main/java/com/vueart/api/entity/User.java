@@ -20,7 +20,6 @@ public class User extends BaseEntity{
     @Column(name = "id")  // 컬럼 지정
     private Long id;
 
-    @NotNull
     @Column(name = "user_id")
     private String userId;
 

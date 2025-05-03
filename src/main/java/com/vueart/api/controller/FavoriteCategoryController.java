@@ -23,7 +23,7 @@ public class FavoriteCategoryController {
 
     private final FavoriteCategoryService favoriteCategoryService;
 
-    @PostMapping("/{userId}/{categoryId}")
+    @GetMapping("/{userId}/{categoryId}")
     public SuccessResponse addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
         return favoriteCategoryService.addFavoriteCategory(userId, categoryId);
 
