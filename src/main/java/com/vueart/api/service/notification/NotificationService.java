@@ -1,10 +1,14 @@
 package com.vueart.api.service.notification;
 
-import com.vueart.api.dto.response.notification.NotificationResponse;
+import com.vueart.api.entity.Notification;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 public interface NotificationService {
-    List<NotificationResponse> getNotifications(String userId, boolean onlyUnread);
-    void markAsRead(String id);
+    List<Notification> getNotifications(String userId, boolean onlyUnread);
+
+    void markAsRead(Long id);
+
     void markAllAsRead(String userId);
 }

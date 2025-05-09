@@ -1,5 +1,7 @@
 package com.vueart.api.service.category;
 
+import com.vueart.api.core.enums.Code;
+import com.vueart.api.core.exception.VueArtApiException;
 import com.vueart.api.dto.request.category.CategoryRequest;
 import com.vueart.api.dto.response.category.CategoryResponse;
 import com.vueart.api.entity.Category;
@@ -17,12 +19,20 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryResponse createCategory(CategoryRequest request) {
+    public void createCategory(CategoryRequest request) {
+        if (request.categoryName().isEmpty() ) {
+            throw new VueArtApiException(Code.ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        if (categoryRepository.findByCategoryName(request.categoryName()).isPresent()) {
+            throw new VueArtApiException(Code.ErrorCode.ALREADY_REGISTERED_USER);
+        }
+
         Category category = Category.builder()
-                .categoryName(request.getCategoryName())
+                .categoryName(request.categoryName())
                 .build();
-        Category saved = categoryRepository.save(category);
-        return new CategoryResponse(saved.getCategoryId(), saved.getCategoryName());
+        categoryRepository.save(category);
+
     }
 
     @Override
@@ -41,6 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new IllegalArgumentException("존재하지 않는 카테고리입니다.");
+        }
         categoryRepository.deleteById(id);
     }
 }

@@ -7,7 +7,6 @@ import com.vueart.api.entity.Subscription;
 import com.vueart.api.service.subscription.SubscriptionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/subscriptions")
 @Tag(name="Subscription")
-public class SubscriptController {
+public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping

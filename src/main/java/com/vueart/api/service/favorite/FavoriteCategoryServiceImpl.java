@@ -2,12 +2,14 @@ package com.vueart.api.service.favorite;
 
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
+import com.vueart.api.core.exception.VueArtApiException;
 import com.vueart.api.dto.response.category.CategoryResponse;
 
 import com.vueart.api.entity.Category;
 import com.vueart.api.entity.User;
 import io.micrometer.common.KeyValues;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import com.vueart.api.repository.favorite.FavoriteCategoryRepository;
 import com.vueart.api.repository.category.CategoryRepository;
 import com.vueart.api.repository.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,8 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
                     .build();
 
             favoriteCategoryRepository.save(favoriteCategory);
+        } else {
+            throw new IllegalStateException("이미 추가되어 있습니다");
         }
 
         return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
@@ -49,16 +54,19 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
         User user = userRepository.findById(userId).orElseThrow();
         List<Category> categories = categoryRepository.findAllById(categoryIds);
 
+        List<FavoriteCategory> favoriteCategoriesToSave = new ArrayList<>();
+
         for (Category category : categories) {
             if (favoriteCategoryRepository.findByUserAndCategory(user, category).isEmpty()) {
                 FavoriteCategory favoriteCategory = FavoriteCategory.builder()
                         .user(user)
                         .category(category)
                         .build();
+                favoriteCategoriesToSave.add(favoriteCategory);
 
-                favoriteCategoryRepository.save(favoriteCategory);
             }
         }
+        favoriteCategoryRepository.saveAll(favoriteCategoriesToSave);
 
         return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
     }
@@ -76,6 +84,14 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
 
     @Override
     public void deleteByUserIdAndCategoryId(Long userId, Long categoryId) {
+
+        boolean exists = favoriteCategoryRepository.findByUser_IdAndCategory_CategoryId(userId, categoryId)
+                .isPresent();
+
+        if (!exists) {
+            throw new VueArtApiException(Code.ErrorCode.NOT_FOUND_FAVORITE_CATEGORY);
+        }
+
         favoriteCategoryRepository.deleteByUserIdAndCategoryId(userId, categoryId);
     }
 }

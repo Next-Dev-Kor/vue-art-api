@@ -1,6 +1,6 @@
 package com.vueart.api.controller;
 
-import com.vueart.api.dto.response.notification.NotificationResponse;
+import com.vueart.api.entity.Notification;
 import com.vueart.api.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +15,13 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    public List<NotificationResponse> getNotifications(@RequestParam String userId,
-                                                       @RequestParam(defaultValue = "false") boolean onlyUnread) {
+    public List<Notification> getNotifications(@RequestParam String userId,
+                                               @RequestParam(defaultValue = "false") boolean onlyUnread) {
         return notificationService.getNotifications(userId, onlyUnread);
     }
 
     @PatchMapping("/{id}/read")
-    public void markAsRead(@PathVariable String id) {
+    public void markAsRead(@PathVariable Long id) {
         notificationService.markAsRead(id);
     }
 

@@ -20,7 +20,7 @@ public class User extends BaseEntity{
     @Column(name = "id")  // 컬럼 지정
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", unique = true)
     private String userId;
 
     @Column(name = "password")

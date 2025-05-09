@@ -1,7 +1,8 @@
 package com.vueart.api.service.notification;
 
-import com.vueart.api.dto.response.notification.NotificationResponse;
-import com.vueart.api.service.notification.NotificationService;
+import com.vueart.api.repository.notification.NotificationRepository;
+import com.vueart.api.entity.Notification;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,18 +11,31 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
-    public List<NotificationResponse> getNotifications(String userId, boolean onlyUnread){
-        System.out.println(userId);
-        return List.of();
-    }
+
+    private final NotificationRepository notificationRepository;
 
     @Override
-    public void markAsRead(String id) {
-        System.out.println(id);
+    public List<Notification> getNotifications(String userId, boolean onlyUnread) {
+        if (onlyUnread) {
+            return notificationRepository.findByUser_UserIdAndIsReadFalse(userId);
+        }
+        return notificationRepository.findByUser_UserId(userId);
     }
 
+
+    @Transactional
     @Override
+    public void markAsRead(Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("알림을 찾을 수 없습니다."));
+        notification.markAsRead();
+    }
+
+
+    @Override
+    @Transactional
     public void markAllAsRead(String userId) {
-        System.out.println(userId);
+        List<Notification> unreadList = notificationRepository.findByUser_UserIdAndIsReadFalse(userId);
+        unreadList.forEach(Notification::markAsRead);
     }
 }

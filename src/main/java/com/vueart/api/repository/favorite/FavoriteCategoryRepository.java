@@ -22,7 +22,6 @@ public interface FavoriteCategoryRepository extends JpaRepository<FavoriteCatego
     @Modifying
     @Query("DELETE FROM FavoriteCategory fc WHERE fc.user.id = :userId AND fc.category.categoryId = :categoryId")
     void deleteByUserIdAndCategoryId(@Param("userId") Long userId, @Param("categoryId") Long categoryId);
-
-
+    Optional<Object> findByUser_IdAndCategory_CategoryId(Long userId, Long categoryId);
 }
 

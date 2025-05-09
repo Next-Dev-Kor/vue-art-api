@@ -9,6 +9,7 @@ import com.vueart.api.entity.FavoriteCategory;
 import com.vueart.api.service.favorite.FavoriteCategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.webauthn.management.MapUserCredentialRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/favorites/categories")
+@RequestMapping("/api/favorite/category")
 @Tag(name="Favorite Category")
 public class FavoriteCategoryController {
 
@@ -43,7 +44,9 @@ public class FavoriteCategoryController {
     }
 
     @DeleteMapping("/{userId}/{categoryId}")
-    public void deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
+    public ResponseEntity<SuccessResponse> deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
         favoriteCategoryService.deleteByUserIdAndCategoryId(userId, categoryId);
+        SuccessResponse response = new SuccessResponse("즐겨찾는 카테고리가 삭제되었습니다.");
+        return ResponseEntity.ok(response);
     }
 }
