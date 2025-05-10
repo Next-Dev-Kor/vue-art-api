@@ -7,6 +7,7 @@ import com.vueart.api.dto.request.favorite.AddFavoriteCategoryRequest;
 import com.vueart.api.dto.response.category.CategoryResponse;
 import com.vueart.api.entity.FavoriteCategory;
 import com.vueart.api.service.favorite.FavoriteCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,18 @@ public class FavoriteCategoryController {
 
     private final FavoriteCategoryService favoriteCategoryService;
 
+    @Operation(
+            summary = "즐겨찾기 추가"
+    )
     @GetMapping("/{userId}/{categoryId}")
     public ResponseEntity<SuccessResponse> addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
         SuccessResponse response = favoriteCategoryService.addFavoriteCategory(userId, categoryId);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "즐겨찾기 추가"
+    )
     @PostMapping("/{userId}")
     public ResponseEntity<SuccessResponse> addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
         SuccessResponse response = favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
@@ -37,12 +44,18 @@ public class FavoriteCategoryController {
 
     }
 
+    @Operation(
+            summary = "사용자의 즐겨찾기 항목"
+    )
     @GetMapping("/{userId}")
     public ResponseEntity<List<CategoryResponse>> getFavoriteCategoryById(@PathVariable Long userId) {
         List<CategoryResponse> response = favoriteCategoryService.getFavoriteCategoryByUserId(userId);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "즐겨찾기 삭제"
+    )
     @DeleteMapping("/{userId}/{categoryId}")
     public ResponseEntity<SuccessResponse> deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
         favoriteCategoryService.deleteByUserIdAndCategoryId(userId, categoryId);

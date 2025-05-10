@@ -1,5 +1,7 @@
 package com.vueart.api.service.subscription;
 
+import com.vueart.api.core.enums.Code;
+import com.vueart.api.core.exception.VueArtApiException;
 import com.vueart.api.dto.request.subcription.SubscribeRequest;
 import com.vueart.api.entity.Subscription;
 import com.vueart.api.entity.User;
@@ -24,13 +26,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void subscribe(SubscribeRequest request) {
 
         User subscriber = userRepository.findByUserId(request.subscriberId())
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
         User organizer = userRepository.findByUserId(request.organizerId())
-                .orElseThrow(() -> new IllegalArgumentException("주최자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_ORGANIZER_ID));
 
-        if (subscriptionRepository.existsBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId())) {
-            throw new IllegalStateException("이미 구독 중입니다.");
+        boolean exists = subscriptionRepository.existsBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId());
+        if (!exists) {
+            throw new VueArtApiException(Code.ErrorCode.ALREADY_REGISTERED_SUBSCRIPTION);
         }
+
         Subscription subscription = new Subscription();
         subscription.setSubscriber(subscriber);
         subscription.setOrganizer(organizer);
@@ -44,9 +48,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void unsubscribe(String subscriberId, String organizerId) {
 
         User subscriber = userRepository.findByUserId(subscriberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
         User organizer = userRepository.findByUserId(organizerId)
-                .orElseThrow(() -> new IllegalArgumentException("주최자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_ORGANIZER_ID));
+
+        boolean exists = subscriptionRepository.existsBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId());
+        if (!exists) {
+            throw new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIPTION);
+        }
+
         subscriptionRepository.deleteBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId());
     }
 
@@ -54,7 +64,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public List<Subscription> getSubscriptions(String subscriberId) {
 
         User subscriber = userRepository.findByUserId(subscriberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
         return subscriptionRepository.findBySubscriberId(subscriber.getId());
     }
 }

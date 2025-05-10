@@ -90,9 +90,14 @@ public class Code {
         NOT_FOUND_FAVORITE_CATEGORY(404,"FAVORITE_CATEGORY_404", "즐겨찾기 항목을 찾을 수 없습니다."),
         ALREADY_DELETED_FAVORITE(404,"FAVORITE_CATEGORY_ALREADY_DELETED", "이미 삭제된 즐겨찾기입니다."),
         ALREADY_REGISTERED_FAVORITE(409,"FAVORITE_CATEGORY_ALREADY_EXISTS", "이미 등록된 즐겨찾기입니다."),
+
+        // Subscription
+        NOT_FOUND_SUBSCRIBER_ID(404, "SUBSCRIBER_404", "해당 구독자를 찾을 수 없습니다."),
+        NOT_FOUND_ORGANIZER_ID(404, "ORGANIZER_404", "해당 주최자를 찾을 수 없습니다."),
+        NOT_FOUND_SUBSCRIPTION(404, "SUBSCRIPTION_404", "해당 구독을 찾을 수 없습니다."),
+        ALREADY_REGISTERED_SUBSCRIPTION(409, "SUBSCRIPTION_ALREADy_EXISTS","이미 등록된 구독입니다." ),
+
         ;
-
-
         private int status;
         private final String code;
         private final String message;
