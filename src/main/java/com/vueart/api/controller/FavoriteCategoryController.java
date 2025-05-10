@@ -25,22 +25,22 @@ public class FavoriteCategoryController {
     private final FavoriteCategoryService favoriteCategoryService;
 
     @GetMapping("/{userId}/{categoryId}")
-    public SuccessResponse addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
-        return favoriteCategoryService.addFavoriteCategory(userId, categoryId);
-
+    public ResponseEntity<SuccessResponse> addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
+        SuccessResponse response = favoriteCategoryService.addFavoriteCategory(userId, categoryId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{userId}")
-    public SuccessResponse addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
-        return favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
+    public ResponseEntity<SuccessResponse> addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
+        SuccessResponse response = favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
+        return ResponseEntity.ok(response);
 
     }
 
     @GetMapping("/{userId}")
-    public  List<CategoryResponse> getFavoriteCategoryById(@PathVariable Long userId) {
-
-        return favoriteCategoryService.getFavoriteCategoryByUserId(userId);
-    
+    public ResponseEntity<List<CategoryResponse>> getFavoriteCategoryById(@PathVariable Long userId) {
+        List<CategoryResponse> response = favoriteCategoryService.getFavoriteCategoryByUserId(userId);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{userId}/{categoryId}")

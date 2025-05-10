@@ -31,8 +31,8 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
     private final CategoryRepository categoryRepository;
 
     public SuccessResponse addFavoriteCategory(Long userId, Long categoryId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Category category = categoryRepository.findById(categoryId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_CATEGORY));
 
         boolean exists = favoriteCategoryRepository.findByUserAndCategory(user, category).isPresent();
         if (!exists) {
@@ -44,14 +44,14 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
 
             favoriteCategoryRepository.save(favoriteCategory);
         } else {
-            throw new IllegalStateException("이미 추가되어 있습니다");
+            throw new VueArtApiException(Code.ErrorCode.ALREADY_REGISTERED_FAVORITE);
         }
 
         return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
     }
 
     public SuccessResponse addFavoriteCategories(Long userId, List<Long> categoryIds) {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID));
         List<Category> categories = categoryRepository.findAllById(categoryIds);
 
         List<FavoriteCategory> favoriteCategoriesToSave = new ArrayList<>();
@@ -75,6 +75,11 @@ public class FavoriteCategoryServiceImpl implements FavoriteCategoryService {
     @Override
     public List<CategoryResponse> getFavoriteCategoryByUserId(Long userId) {
         List<FavoriteCategory> favoriteCategories = favoriteCategoryRepository.getFavoriteCategoryByUserId(userId);
+
+        if (favoriteCategories.isEmpty()) {
+            throw new VueArtApiException(Code.ErrorCode.NOT_FOUND_FAVORITE_CATEGORY);
+        }
+
         return favoriteCategories.stream()
                 .map(favoriteCategory -> new CategoryResponse(
                         favoriteCategory.getCategory().getCategoryId(),
