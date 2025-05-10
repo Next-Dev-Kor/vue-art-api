@@ -1,5 +1,7 @@
 package com.vueart.api.config.security.config;
 
+import com.vueart.api.common.auth.CustomOAuth2UserService;
+import com.vueart.api.common.auth.handler.OAuth2SuccessHandler;
 import com.vueart.api.config.security.jwt.JwtAuthenticationFilter;
 import com.vueart.api.config.security.exception.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     @Description("패스워드 암호화")
@@ -48,10 +52,16 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/api-docs/**",
-                                        "/webjars/**"
+                                        "/webjars/**",
+                                        "/api/auth/**"
                                 ).permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                 .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/google")
+                        .successHandler(oAuth2SuccessHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                )
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(authenticationManager -> authenticationManager
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));

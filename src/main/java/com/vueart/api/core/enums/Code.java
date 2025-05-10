@@ -1,6 +1,8 @@
 package com.vueart.api.core.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 public class Code {
 
@@ -9,6 +11,22 @@ public class Code {
         N
     }
 
+    public enum MemberRole {
+        USER
+    }
+
+    public enum SocialLoginType {
+        GOOGLE
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Role {
+        GUEST("ROLE_GUEST"),
+        USER("ROLE_USER");
+
+        private final String key;
+    }
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ApiResponseCode {
         SUCCESS(200, "S001", "success"),
