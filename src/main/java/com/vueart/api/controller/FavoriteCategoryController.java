@@ -29,37 +29,37 @@ public class FavoriteCategoryController {
             summary = "즐겨찾기 추가"
     )
     @GetMapping("/{userId}/{categoryId}")
-    public ResponseEntity<SuccessResponse> addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
+    public SuccessResponse addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
         SuccessResponse response = favoriteCategoryService.addFavoriteCategory(userId, categoryId);
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @Operation(
             summary = "즐겨찾기 추가"
     )
     @PostMapping("/{userId}")
-    public ResponseEntity<SuccessResponse> addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
+    public SuccessResponse addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
         SuccessResponse response = favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
-        return ResponseEntity.ok(response);
+        return response;
 
     }
 
     @Operation(
-            summary = "사용자의 즐겨찾기 항목"
+            summary = "사용자의 즐겨찾기 항목 조회"
     )
     @GetMapping("/{userId}")
-    public ResponseEntity<List<CategoryResponse>> getFavoriteCategoryById(@PathVariable Long userId) {
+    public List<CategoryResponse> getFavoriteCategoryById(@PathVariable Long userId) {
         List<CategoryResponse> response = favoriteCategoryService.getFavoriteCategoryByUserId(userId);
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @Operation(
             summary = "즐겨찾기 삭제"
     )
     @DeleteMapping("/{userId}/{categoryId}")
-    public ResponseEntity<SuccessResponse> deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
+    public SuccessResponse deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
         favoriteCategoryService.deleteByUserIdAndCategoryId(userId, categoryId);
         SuccessResponse response = new SuccessResponse("즐겨찾는 카테고리가 삭제되었습니다.");
-        return ResponseEntity.ok(response);
+        return response;
     }
 }

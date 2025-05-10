@@ -2,6 +2,7 @@ package com.vueart.api.controller;
 
 import com.vueart.api.entity.Notification;
 import com.vueart.api.service.notification.NotificationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
+@Tag(name="Notification")
 public class NotificationController {
 
     private final NotificationService notificationService;
