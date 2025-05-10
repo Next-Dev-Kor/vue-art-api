@@ -30,8 +30,8 @@ public class FavoriteCategoryController {
     )
     @GetMapping("/{userId}/{categoryId}")
     public SuccessResponse addFavorite(@PathVariable Long userId, @PathVariable Long categoryId) {
-        SuccessResponse response = favoriteCategoryService.addFavoriteCategory(userId, categoryId);
-        return response;
+        return favoriteCategoryService.addFavoriteCategory(userId, categoryId);
+
     }
 
     @Operation(
@@ -39,8 +39,8 @@ public class FavoriteCategoryController {
     )
     @PostMapping("/{userId}")
     public SuccessResponse addFavorites(@PathVariable Long userId, @RequestBody List<Long> categoryIds) {
-        SuccessResponse response = favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
-        return response;
+        return favoriteCategoryService.addFavoriteCategories(userId, categoryIds);
+
 
     }
 
@@ -49,8 +49,7 @@ public class FavoriteCategoryController {
     )
     @GetMapping("/{userId}")
     public List<CategoryResponse> getFavoriteCategoryById(@PathVariable Long userId) {
-        List<CategoryResponse> response = favoriteCategoryService.getFavoriteCategoryByUserId(userId);
-        return response;
+        return  favoriteCategoryService.getFavoriteCategoryByUserId(userId);
     }
 
     @Operation(
@@ -59,7 +58,6 @@ public class FavoriteCategoryController {
     @DeleteMapping("/{userId}/{categoryId}")
     public SuccessResponse deleteFavoriteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
         favoriteCategoryService.deleteByUserIdAndCategoryId(userId, categoryId);
-        SuccessResponse response = new SuccessResponse("즐겨찾는 카테고리가 삭제되었습니다.");
-        return response;
+        return new SuccessResponse("즐겨찾는 카테고리가 삭제되었습니다.");
     }
 }
