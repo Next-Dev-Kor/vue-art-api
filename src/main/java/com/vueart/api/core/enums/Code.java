@@ -97,6 +97,9 @@ public class Code {
         NOT_FOUND_SUBSCRIPTION(404, "SUBSCRIPTION_404", "해당 구독을 찾을 수 없습니다."),
         ALREADY_REGISTERED_SUBSCRIPTION(409, "SUBSCRIPTION_ALREADy_EXISTS","이미 등록된 구독입니다." ),
 
+        // Notification
+        NOT_FOUND_NOTIFICATION(404, "NOTIFICATION_404", "알림을 찾을 수 없습니다.")
+
         ;
         private int status;
         private final String code;
