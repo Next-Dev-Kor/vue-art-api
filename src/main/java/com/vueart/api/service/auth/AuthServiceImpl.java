@@ -8,7 +8,6 @@ import com.vueart.api.dto.request.user.SignInRequest;
 import com.vueart.api.dto.request.user.SignUpRequest;
 import com.vueart.api.entity.User;
 import com.vueart.api.repository.user.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +37,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(req.email())
                 .userId(req.userId())
                 .password(passwordEncoder.encode(aes256Util.decode(req.password())))
+                .business(Code.YN.N)
+                .region(req.region())
                 .build();
         userRepository.save(user);
     }
