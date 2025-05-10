@@ -48,14 +48,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(
-                                        "/swagger-ui.html",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/api-docs/**",
-                                        "/webjars/**",
-                                        "/api/auth/**"
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/**",
+                                    "/v3/api-docs/**",
+                                    "/api-docs/**",
+                                    "/webjars/**",
+                                    "/api/auth/**",
+                                    "/api/favorite/category/**",
+                                    "/api/category/**",
+                                    "/api/subscriptions/**",
+                                    "/api/notifications/**",
+                                    "/oauth2/**", 
+                                    "/login/**"
                                 ).permitAll()
-                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/google")
