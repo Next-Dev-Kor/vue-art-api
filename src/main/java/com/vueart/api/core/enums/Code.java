@@ -81,7 +81,17 @@ public class Code {
         SQL_EXCEPTION(500, "E501", "DB 연결 관련 예외 발생."),
         DATA_ACCESS_EXCEPTION(500, "E502", "DB 관련 예외 발생."),
         CSV_PARSING_ERROR(500, "E03", "CSV 파싱 에러"),
+
+        // Category
+        ALREADY_REGISTERED_CATEGORY(409,"CATEGORY_ALREADY_EXISTS", "이미 등록된 카테고리입니다."),
+        NOT_FOUND_CATEGORY(404,"CATEGORY_404", "카테고리를 찾을 수 없습니다."),
+
+        // Favorite Category
+        NOT_FOUND_FAVORITE_CATEGORY(404,"FAVORITE_CATEGORY_404", "즐겨찾기 항목을 찾을 수 없습니다."),
+        ALREADY_DELETED_FAVORITE(404,"FAVORITE_CATEGORY_ALREADY_DELETED", "이미 삭제된 즐겨찾기입니다."),
+        ALREADY_REGISTERED_FAVORITE(409,"FAVORITE_CATEGORY_ALREADY_EXISTS", "이미 등록된 즐겨찾기입니다."),
         ;
+
 
         private int status;
         private final String code;

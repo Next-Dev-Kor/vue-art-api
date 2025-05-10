@@ -51,6 +51,10 @@ public class SecurityConfig {
                                         "/webjars/**"
                                 ).permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/favorite/category/**").permitAll()
+                                .requestMatchers("/api/category/**").permitAll()
+                                .requestMatchers("/api/subscriptions/**").permitAll()
+                                .requestMatchers("/api/notifications/**").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(authenticationManager -> authenticationManager
