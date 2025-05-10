@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +23,19 @@ public class NotificationServiceImpl implements NotificationService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Notification> getNotifications(Long userId, boolean onlyUnread) {
+    public List<String> getNotifications(Long userId, boolean onlyUnread) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID));
+        List<Notification> notifications;
+
         if (onlyUnread) {
-            return notificationRepository.findByUser_UserIdAndIsReadFalse(userId);
+            notifications = notificationRepository.findByUser_IdAndIsReadFalse(userId);
         }
-        return notificationRepository.findByUser_UserId(userId);
+        notifications = notificationRepository.findByUser_Id(userId);
+
+        return notifications.stream()
+                .map(Notification::getMessage) // 각 Notification에서 message만 추출
+                .collect(Collectors.toList());
     }
 
 
@@ -49,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
             throw new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID);
         }
 
-        List<Notification> unreadList = notificationRepository.findByUser_UserIdAndIsReadFalse(userId);
+        List<Notification> unreadList = notificationRepository.findByUser_IdAndIsReadFalse(userId);
         unreadList.forEach(Notification::markAsRead);
     }
 }

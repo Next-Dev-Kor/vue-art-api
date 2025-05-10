@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface NotificationService {
-    List<Notification> getNotifications(Long userId, boolean onlyUnread);
+    List<String> getNotifications(Long userId, boolean onlyUnread);
 
     void markAsRead(Long notificationId);
 

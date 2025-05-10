@@ -1,9 +1,13 @@
 package com.vueart.api.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 public class Notification {
     @Id
@@ -28,10 +32,10 @@ public class Notification {
     // 기본 생성자 (JPA 필수)
     protected Notification() {}
 
-    // 생성자 or 빌더 패턴으로 객체 생성
-    public Notification(User user, String message) {
-        this.user = user;
-        this.message = message;
-        this.createdAt = LocalDateTime.now();
-    }
+//    // 생성자 or 빌더 패턴으로 객체 생성
+//    public Notification(User user, String message) {
+//        this.user = user;
+//        this.message = message;
+//        this.createdAt = LocalDateTime.now();
+//    }
 }
