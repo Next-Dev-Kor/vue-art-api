@@ -25,13 +25,13 @@ public class SubscriptionController {
     }
 
     @DeleteMapping
-    public SuccessResponse unsubscribe(@RequestParam String subscriberId, @RequestParam String organizerId) {
+    public SuccessResponse unsubscribe(@RequestParam Long subscriberId, @RequestParam Long organizerId) {
         subscriptionService.unsubscribe(subscriberId, organizerId);
         return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
     }
 
     @GetMapping
-    public List<Subscription> getSubscriptions(@RequestParam String subscriberId) {
+    public List<Subscription> getSubscriptions(@RequestParam Long subscriberId) {
         return subscriptionService.getSubscriptions(subscriberId);
     }
 }

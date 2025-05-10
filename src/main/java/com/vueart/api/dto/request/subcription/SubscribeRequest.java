@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public record SubscribeRequest (
-    String subscriberId,
-    String organizerId
+    Long subscriberId,
+    Long organizerId
 ){}
 

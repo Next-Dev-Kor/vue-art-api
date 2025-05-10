@@ -6,9 +6,9 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface NotificationService {
-    List<Notification> getNotifications(String userId, boolean onlyUnread);
+    List<Notification> getNotifications(Long userId, boolean onlyUnread);
 
-    void markAsRead(Long id);
+    void markAsRead(Long notificationId);
 
-    void markAllAsRead(String userId);
+    void markAllAsRead(Long userId);
 }

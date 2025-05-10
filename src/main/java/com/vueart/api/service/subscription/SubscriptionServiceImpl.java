@@ -25,9 +25,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     public void subscribe(SubscribeRequest request) {
 
-        User subscriber = userRepository.findByUserId(request.subscriberId())
+        User subscriber = userRepository.findById(request.subscriberId())
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
-        User organizer = userRepository.findByUserId(request.organizerId())
+        User organizer = userRepository.findById(request.organizerId())
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_ORGANIZER_ID));
 
         boolean exists = subscriptionRepository.existsBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId());
@@ -45,11 +45,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Transactional
     @Override
-    public void unsubscribe(String subscriberId, String organizerId) {
+    public void unsubscribe(Long subscriberId, Long organizerId) {
 
-        User subscriber = userRepository.findByUserId(subscriberId)
+        User subscriber = userRepository.findById(subscriberId)
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
-        User organizer = userRepository.findByUserId(organizerId)
+        User organizer = userRepository.findById(organizerId)
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_ORGANIZER_ID));
 
         boolean exists = subscriptionRepository.existsBySubscriberIdAndOrganizerId(subscriber.getId(), organizer.getId());
@@ -61,9 +61,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<Subscription> getSubscriptions(String subscriberId) {
+    public List<Subscription> getSubscriptions(Long subscriberId) {
 
-        User subscriber = userRepository.findByUserId(subscriberId)
+        User subscriber = userRepository.findById(subscriberId)
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
         return subscriptionRepository.findBySubscriberId(subscriber.getId());
     }

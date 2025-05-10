@@ -11,7 +11,7 @@ public interface SubscriptionService {
     void subscribe(SubscribeRequest request);
 
     @Transactional
-    void unsubscribe(String subscriberId, String organizerId);
+    void unsubscribe(Long subscriberId, Long organizerId);
 
-    List<Subscription> getSubscriptions(String subscriberId);
+    List<Subscription> getSubscriptions(Long subscriberId);
 }
