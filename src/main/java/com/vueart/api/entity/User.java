@@ -17,12 +17,12 @@ import lombok.experimental.SuperBuilder;
 public class User extends BaseEntity {
     @Id  // Primary Key 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // AUTO_INCREMENT 설정 (id값이 null일 경우 자동 생성)
-    @Column(name = "user_id")  // 컬럼 지정
+    @Column(name = "id")  // 컬럼 지정
     private Long id;
 
     @NotNull
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_id")
+    private String userId;
 
     @Column(name = "password")
     private String password;
@@ -35,6 +35,9 @@ public class User extends BaseEntity {
     @Column(name = "business", length = 1)
     @Enumerated(EnumType.STRING)
     private Code.YN business;
+
+    @Column(name = "user_name")
+    private String userName;
 
     @Column(name = "region")
     private String region;
@@ -52,7 +55,7 @@ public class User extends BaseEntity {
         return User.builder()
                 .id(id)
                 .email(this.email)
-                .userName(this.userName)
+                .userId(this.userId)
                 .password(password)
                 .build();
     }

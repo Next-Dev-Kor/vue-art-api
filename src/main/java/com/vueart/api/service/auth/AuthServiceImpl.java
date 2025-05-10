@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user = User.builder()
                 .email(req.email())
-                .userName(req.userName())
+                .userId(req.userId())
                 .password(passwordEncoder.encode(aes256Util.decode(req.password())))
                 .business(Code.YN.N)
                 .region(req.region())
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     public String signIn(SignInRequest req) {
         String decPassword = null;
         boolean isValidPass = true;
-        User user = userRepository.findByEmail(req.email())
+        User user = (User) userRepository.findByUserId(req.userId())
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_REGISTERED_USER));
 
         try { // 패스워드 암호화 위변조 체크
