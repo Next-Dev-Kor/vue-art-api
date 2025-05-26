@@ -1,31 +1,41 @@
 package com.vueart.api.config.security.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.core.exception.ErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vueart.api.dto.exception.ErrorResponseDto;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
+@Slf4j(topic = "UNAUTHORIZATION_EXCEPTION_HANDLER")
+@AllArgsConstructor
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        Object exception = request.getAttribute("exception");
-        if (ObjectUtils.isEmpty(exception)) { // Header에 JWT Token이 없을 경우 setting
-            response.getWriter().write(mapper.writeValueAsString(new ErrorResponse(Code.ErrorCode.UNAUTHORIZED)));
-        } else {
-            response.getWriter().write(mapper.writeValueAsString(exception));
-        }
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
+        log.error("Not Authenticated Request", authException);
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.UNAUTHORIZED.value(), authException.getMessage(), LocalDateTime.now());
+
+        String responseBody = objectMapper.writeValueAsString(errorResponseDto);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(responseBody);
     }
 }

@@ -6,12 +6,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
@@ -23,7 +25,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         CustomOauth2UserDetails userDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
 
-        String token = jwtTokenProvider.createToken(String.format("%s:%s", userDetails.getUsername(), userDetails.getRole()));
+        String token = jwtTokenProvider.generateAccessToken(String.format("%s", userDetails.getUserId()));
 
         String redirectUrl = "http://localhost:3000/oauth/redirect?token=" + token;
         response.sendRedirect(redirectUrl);

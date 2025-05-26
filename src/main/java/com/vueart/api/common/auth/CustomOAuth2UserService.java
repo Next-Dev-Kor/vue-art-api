@@ -48,12 +48,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         if (findUser.isEmpty()) {
             user = User.builder()
+                    .userId("google_" + providerId)
                     .email(email)
                     .business(Code.YN.N)
                     .userName(name)
                     .provider(provider)
                     .providerId(providerId)
-                    .role(Code.MemberRole.USER)
+                    .role(Code.Role.USER)
                     .build();
             userRepository.save(user);
             log.info("신규 사용자 저장: {}", user.getEmail());
