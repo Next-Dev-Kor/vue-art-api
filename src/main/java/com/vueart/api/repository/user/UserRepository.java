@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long>, CustomQuerydslUserRepository{
+
     Optional<User> findByEmail(@NotNull String email);
 
-	Optional<Object> findByUserId(@NotNull String userId);
+	Optional<User> findByUserId(@NotNull String userId);
 }
