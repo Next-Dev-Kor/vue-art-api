@@ -55,12 +55,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(
-                                        "/swagger-ui.html",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/api-docs/**",
-                                        "/webjars/**",
-                                        "/api/auth/**"
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/**",
+                                    "/v3/api-docs/**",
+                                    "/api-docs/**",
+                                    "/webjars/**",
+                                    "/api/auth/**",
+                                    "/api/favorite/category/**",
+                                    "/api/category/**",
+                                    "/api/subscriptions/**",
+                                    "/api/notifications/**",
+                                    "/oauth2/**", 
+                                    "/login/**"
                                 ).permitAll()
                                 .requestMatchers("/public/**").permitAll()  // 공개 접근 경로
                                 .requestMatchers("/api/**").authenticated() // 인증 필요 경로
