@@ -1,7 +1,11 @@
 package com.vueart.api.config.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vueart.api.core.enums.Code.ErrorCode;
 import com.vueart.api.core.exception.ErrorResponse;
+import com.vueart.api.entity.User;
+import com.vueart.api.repository.user.UserRepository;
+import com.vueart.api.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -12,23 +16,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -36,94 +33,44 @@ import java.util.Optional;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String EXCEPTION_ATTRIBUTE_NAME = "exception";
-    private final TokenProvider tokenProvider;
+    private final TokenProvider jwtProvider;
+
+    private final UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String token = parseBearerToken(req);
-            User user = parseUserSpecification(token);
-            if(StringUtils.hasText(token) && !"anonymous".equals(user.getUsername())) {
-                AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user, token, user.getAuthorities());
-                authenticated.setDetails(new WebAuthenticationDetails(req));
-                SecurityContextHolder.getContext().setAuthentication(authenticated);
-            }
-        } catch (SignatureException e ) {
-            req.setAttribute(EXCEPTION_ATTRIBUTE_NAME, new ErrorResponse(ErrorCode.INVALID_JWT_SIGNATURE));
-        } catch (MalformedJwtException | IllegalArgumentException e) {
-            req.setAttribute(EXCEPTION_ATTRIBUTE_NAME, new ErrorResponse(ErrorCode.INVALID_JWT_TOKEN));
-        } catch (ExpiredJwtException e) {
-            req.setAttribute(EXCEPTION_ATTRIBUTE_NAME, new ErrorResponse(ErrorCode.EXPIRED_JWT_TOKEN));
-        } catch (UnsupportedJwtException e) {
-            req.setAttribute(EXCEPTION_ATTRIBUTE_NAME, new ErrorResponse(ErrorCode.NOT_SUPPORTED_JWT_TOKEN));
-        } finally {
-            filterChain.doFilter(req, res);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        final String token = request.getHeader("Authorization");
+
+        String username = null;
+
+        // Bearer token 검증 후 user name 조회
+        if(token != null && !token.isEmpty()) {
+            String jwtToken = token.substring(7);
+
+            username = jwtProvider.getUsernameFromToken(jwtToken);
         }
-    }
 
-    private String parseBearerToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-                .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer "))
-                .map(token -> token.substring(7))
-                .orElse(null);
-    }
-
-    private User parseUserSpecification(String token) {
-        String[] split = Optional.ofNullable(token)
-                .filter(subject -> subject.length() >= 10)
-                .map(tokenProvider::validateTokenAndGetSubject)
-                .orElse("anonymous:anonymous")
-                .split(":");
-        return new User(split[0], "", List.of(new SimpleGrantedAuthority(split[1])));
-    }
-
-    protected void doFilterWrapped(ContentCachingRequestWrapper req, ContentCachingResponseWrapper res, FilterChain filterChain) throws IOException, ServletException {
-        try {
-            filterChain.doFilter(req, res);
-            logRequest(req);
-        } finally {
-            logResponse(res);
-            res.copyBodyToResponse();
+        // token 검증 완료 후 SecurityContextHolder 내 인증 정보가 없는 경우 저장
+        if(username != null && !username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Spring Security Context Holder 인증 정보 set
+            SecurityContextHolder.getContext().setAuthentication(getUserAuth(username));
         }
+
+        filterChain.doFilter(request,response);
     }
 
-    private static void logRequest(ContentCachingRequestWrapper request) throws IOException {
-        String queryString = request.getQueryString();
-        log.info("Request : {} uri=[{}] content-type[{}]", request.getMethod(),
-                queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString,
-                request.getContentType());
-        logPayload("Request", request.getContentType(), request.getContentAsByteArray());
-    }
+    /**
+     * token의 사용자 idx를 이용하여 사용자 정보 조회하고, UsernamePasswordAuthenticationToken 생성
+     *
+     * @param username 사용자 idx
+     * @return 사용자 UsernamePasswordAuthenticationToken
+     */
+    private UsernamePasswordAuthenticationToken getUserAuth(String username) {
+        Optional<User> userInfo = userRepository.findById(Long.parseLong(username));
 
-    private static void logResponse(ContentCachingResponseWrapper response) throws IOException {
-        logPayload("Response", response.getContentType(), response.getContentAsByteArray());
-    }
-
-    private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
-        boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
-        if (visible) {
-            if (rowData.length > 0) {
-                String contentString = new String(rowData);
-                log.info("{} Payload: {}", prefix, contentString);
-            }
-        } else {
-            log.info("{} Payload: Binary Content", prefix);
-        }
-    }
-
-    private static boolean isVisible(MediaType mediaType) {
-        final List<MediaType> visibleTypes = Arrays.asList(
-                MediaType.valueOf("text/*"),
-                MediaType.APPLICATION_FORM_URLENCODED,
-                MediaType.APPLICATION_JSON,
-                MediaType.APPLICATION_XML,
-                MediaType.valueOf("application/*+json"),
-                MediaType.valueOf("application/*+xml"),
-                MediaType.MULTIPART_FORM_DATA
+        return new UsernamePasswordAuthenticationToken(userInfo.get().getId(),
+                userInfo.get().getPassword(),
+                Collections.singleton(new SimpleGrantedAuthority(userInfo.get().getRole().name()))
         );
-
-        return visibleTypes.stream()
-                .anyMatch(visibleType -> visibleType.includes(mediaType));
     }
 }
