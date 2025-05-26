@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     private String region;
 
     @Enumerated(EnumType.STRING)
-    private Code.MemberRole role;
+    private Code.Role role;
 
     @Column(name = "provider")
     private String provider;
