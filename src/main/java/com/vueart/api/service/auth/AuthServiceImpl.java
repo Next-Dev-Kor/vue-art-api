@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -24,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder encoder;
 
     @Override
+    @Transactional
     public void signUp(SignUpRequest req) {
         if (req.email().isEmpty() || req.password().isEmpty()) {
             throw new VueArtApiException(Code.ErrorCode.INVALID_INPUT_VALUE);
@@ -39,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(aes256Util.decode(req.password())))
                 .business(Code.YN.N)
                 .region(req.region())
+                .role(Code.Role.USER)
                 .build();
         userRepository.save(user);
     }
@@ -63,6 +66,6 @@ public class AuthServiceImpl implements AuthService {
         if (!isValidPass || !encoder.matches(decPassword, user.getPassword())) {
             throw new VueArtApiException(Code.ErrorCode.INVALID_PASSWORD);
         }
-        return tokenProvider.createToken(String.format("%s:%s", user.getId(), user.getEmail()));
+        return tokenProvider.generateAccessToken(String.format("%s", user.getId()));
     }
 }

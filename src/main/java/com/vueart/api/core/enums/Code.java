@@ -11,10 +11,6 @@ public class Code {
         N
     }
 
-    public enum MemberRole {
-        USER
-    }
-
     public enum SocialLoginType {
         GOOGLE
     }
@@ -22,16 +18,18 @@ public class Code {
     @Getter
     @RequiredArgsConstructor
     public enum Role {
-        GUEST("ROLE_GUEST"),
         USER("ROLE_USER");
 
         private final String key;
     }
+
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ApiResponseCode {
         SUCCESS(200, "S001", "success"),
         SUCCESS_SIGN_UP(201,"S002","회원 가입이 완료되었습니다."),
         SUCCESS_SIGN_IN(200,"S003","로그인되었습니다."),
+        CREATED_EXHIBITION_INFO(201,"S004","전시회 정보가 등록되었습니다."),
+        UPDATED_EXHIBITION_INFO(201,"S005","전시회 정보가 수정되었습니다."),
         ;
         private int status;
         private final String code;

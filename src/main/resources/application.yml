@@ -17,6 +17,7 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   issuer: ${JWT_ISSUER}
+  token-validity-in-seconds: 86400
 
 aes:
   key: ${ASE_KEY}
@@ -28,6 +29,9 @@ logging:
     '[org.springframework.web]': debug
     jdbc: off
     sqltiming: debug
+    org:
+      springframework:
+        security: DEBUG
 
 server:
   port: 8080
@@ -40,7 +44,7 @@ cors:
 
 app:
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenSecret: ${APP_AUTH_TOKEN_SECRET}
     tokenExpiry: 1800000
     refreshTokenExpiry: 604800000
   oauth2:
@@ -142,7 +146,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
 
 springdoc:
