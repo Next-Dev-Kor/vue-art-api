@@ -1,5 +1,6 @@
 package com.vueart.api.common.response;
 
+import com.vueart.api.core.enums.Code;
 import com.vueart.api.core.enums.Code.ApiResponseCode;
 import lombok.AccessLevel;
 import lombok.Getter;

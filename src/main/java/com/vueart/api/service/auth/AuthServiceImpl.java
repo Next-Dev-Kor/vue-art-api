@@ -22,7 +22,6 @@ public class AuthServiceImpl implements AuthService {
     private final AES256Util aes256Util;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final PasswordEncoder encoder;
 
     @Override
     @Transactional
@@ -63,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("password => {}", user.getPassword());
         log.info("isValidPass => {}", isValidPass);
 
-        if (!isValidPass || !encoder.matches(decPassword, user.getPassword())) {
+        if (!isValidPass || !passwordEncoder.matches(decPassword, user.getPassword())) {
             throw new VueArtApiException(Code.ErrorCode.INVALID_PASSWORD);
         }
         return tokenProvider.generateAccessToken(String.format("%s", user.getId()));

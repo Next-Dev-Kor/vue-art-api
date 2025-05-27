@@ -2,7 +2,6 @@ package com.vueart.api.common.auth.handler;
 
 import com.vueart.api.common.auth.dto.CustomOauth2UserDetails;
 import com.vueart.api.config.security.jwt.TokenProvider;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
