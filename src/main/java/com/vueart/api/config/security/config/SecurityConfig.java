@@ -1,6 +1,7 @@
 package com.vueart.api.config.security.config;
 
 import com.vueart.api.common.auth.CustomOAuth2UserService;
+import com.vueart.api.common.auth.handler.OAuth2FailHandler;
 import com.vueart.api.common.auth.handler.OAuth2SuccessHandler;
 import com.vueart.api.config.security.exception.JwtAuthenticationEntryPoint;
 import com.vueart.api.config.security.handler.JwtAccessDeniedHandler;
@@ -36,6 +37,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final OAuth2FailHandler oAuth2FailHandler;
 
     @Bean
     @Description("패스워드 암호화")
@@ -76,6 +78,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/google")
                         .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuth2FailHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                 )
                 .exceptionHandling(exception -> exception
