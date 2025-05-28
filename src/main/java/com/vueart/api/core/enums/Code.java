@@ -12,7 +12,7 @@ public class Code {
     }
 
     public enum SocialLoginType {
-        GOOGLE
+        GOOGLE, KAKAO, NAVER
     }
 
     @Getter

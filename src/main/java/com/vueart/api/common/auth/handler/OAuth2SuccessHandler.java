@@ -44,7 +44,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 "accessToken", accessToken,
                 "refreshToken", refreshToken
         );
-        CommonApiResponse<Map<String, String>> successResponse = ApiResponseUtil.success(tokens);
+        CommonApiResponse<Map<String, String>> successResponse = apiResponseUtil.success(tokens);
 
         // 응답 작성
         response.setContentType("application/json");

@@ -33,11 +33,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuth2UserInfo oAuth2UserInfo = null;
 
+        Code.SocialLoginType socialLoginType = null;
+
         if (provider.equals("google")) {
             log.info("구글 로그인");
+            socialLoginType = Code.SocialLoginType.GOOGLE;
             oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
         } else if (provider.equals("kakao")) {
             log.info("카카오 로그인");
+            socialLoginType = Code.SocialLoginType.KAKAO;
             oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
         }
         String providerId = oAuth2UserInfo.getProviderId();
@@ -51,11 +55,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         if (findUser.isEmpty()) {
             user = User.builder()
-                    .userId("google_" + providerId)
+                    .userId(provider + providerId)
                     .email(email)
                     .business(Code.YN.N)
                     .userName(name)
-                    .provider(provider)
+                    .provider(socialLoginType.toString())
                     .providerId(providerId)
                     .role(Code.Role.USER)
                     .build();
