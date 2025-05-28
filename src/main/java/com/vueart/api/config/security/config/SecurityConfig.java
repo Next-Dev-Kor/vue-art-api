@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -57,23 +56,23 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(
-                                    "/swagger-ui.html",
-                                    "/swagger-ui/**",
-                                    "/v3/api-docs/**",
-                                    "/api-docs/**",
-                                    "/webjars/**",
-                                    "/api/auth/**",
-                                    "/api/favorite/category/**",
-                                    "/api/category/**",
-                                    "/api/subscriptions/**",
-                                    "/api/notifications/**",
-                                    "/oauth2/**", 
-                                    "/login/**"
+                                        "/swagger-ui.html",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/api-docs/**",
+                                        "/webjars/**",
+                                        "/api/auth/**",
+                                        "/api/favorite/category/**",
+                                        "/api/category/**",
+                                        "/api/subscriptions/**",
+                                        "/api/notifications/**",
+                                        "/oauth2/**",
+                                        "/login/**"
                                 ).permitAll()
                                 .requestMatchers("/public/**").permitAll()  // 공개 접근 경로
                                 .requestMatchers("/api/**").authenticated() // 인증 필요 경로
                                 .requestMatchers("/api/exhibition/**").authenticated()
-                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                                .requestMatchers("/oauth2/**", "/api/login/oauth2/code/**", "/login/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/google")
