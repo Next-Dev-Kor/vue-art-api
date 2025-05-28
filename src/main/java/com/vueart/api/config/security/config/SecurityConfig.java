@@ -67,7 +67,9 @@ public class SecurityConfig {
                                         "/api/subscriptions/**",
                                         "/api/notifications/**",
                                         "/oauth2/**",
-                                        "/login/**"
+                                        "/login/**",
+                                        "/auth/login/kakao/**",
+                                        "/login/oauth2/code/kakao"
                                 ).permitAll()
                                 .requestMatchers("/public/**").permitAll()  // 공개 접근 경로
                                 .requestMatchers("/api/**").authenticated() // 인증 필요 경로
@@ -76,6 +78,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/google")
+                        .loginPage("/oauth2/authorization/kakao")
                         .successHandler(oAuth2SuccessHandler)
                         .failureHandler(oAuth2FailHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
