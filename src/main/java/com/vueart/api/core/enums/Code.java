@@ -12,7 +12,7 @@ public class Code {
     }
 
     public enum SocialLoginType {
-        GOOGLE
+        GOOGLE, KAKAO, NAVER
     }
 
     @Getter
@@ -61,7 +61,6 @@ public class Code {
             }
             return null;
         }
-
     }
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ErrorCode {
