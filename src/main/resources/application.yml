@@ -25,6 +25,26 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD}
+
+  #logging
+  logging:
+    level:
+      root: info
+      '[org.springframework.web]': debug               # 웹 요청 처리
+      '[org.hibernate.SQL]': debug                    # 실행되는 SQL 문
+      '[org.hibernate.type.descriptor.sql]': trace    # 바인딩 파라미터까지 보고 싶을 때
+      '[org.springframework.security]': debug         # 스프링 시큐리티 디버깅
+      '[org.springframework.boot.autoconfigure]': debug # 자동 설정 확인
+      '[com.zaxxer.hikari]': debug                    # 커넥션 풀 로깅
+      '[org.springframework.data.redis]': debug       # Redis 작동 로그
+      '[org.springframework.transaction]': trace      # 트랜잭션 관련 디버깅
+      jdbc: off
+      sqltiming: debug
 
   config:
     import: optional:file:.env.${spring.profiles.active}[.properties]
@@ -60,6 +80,32 @@ logging:
 server:
   port: 8080
 
+springdoc:
+  swagger-ui:
+    url: /v3/api-docs
+    path: /swagger-ui.html
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+    defaultModelsExpandDepth: 2
+    defaultModelExpandDepth: 2
+  show-actuator: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  paths-to-match:
+    - /api/**
+    - /swagger-ui.html
+  packages-to-scan: com.vueart.api.controller
+  api-docs:
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+
 ---
 spring:
   application:
@@ -89,40 +135,6 @@ spring:
       ddl-auto: update
     open-in-view: false
 
-springdoc:
-  swagger-ui:
-    url: /v3/api-docs
-    path: /swagger-ui.html
-    groups-order: DESC
-    tags-sorter: alpha
-    operations-sorter: method
-    disable-swagger-default-url: true
-    display-request-duration: true
-    defaultModelsExpandDepth: 2
-    defaultModelExpandDepth: 2
-  show-actuator: true
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  writer-with-default-pretty-printer: true
-  model-and-view-allowed: true
-  paths-to-match:
-    - /api/**
-    - /swagger-ui.html          # UI ?? ??
-  packages-to-scan: com.vueart.api.controller  # ??? ??? ??
-  api-docs:
-    groups:
-      enabled: true
-  cache:
-    disabled: true
-
-#logging
-logging:
-  level:
-    root: info
-    '[org.springframework.web]': debug
-    jdbc: off
-    sqltiming: debug
-
 ---
 spring:
   application:
@@ -150,29 +162,3 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
-
-springdoc:
-  swagger-ui:
-    url: /v3/api-docs
-    path: /swagger-ui.html         # Swagger UI ?? ??
-    groups-order: DESC             # ?? ??
-    tags-sorter: alpha             # ?? ?? ??
-    operations-sorter: method      # ??? ? ??
-    disable-swagger-default-url: true
-    display-request-duration: true
-    defaultModelsExpandDepth: 2
-    defaultModelExpandDepth: 2
-  show-actuator: true
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  writer-with-default-pretty-printer: true
-  model-and-view-allowed: true
-  paths-to-match:
-    - /api/**
-    - /swagger-ui.html          # UI ?? ??
-  packages-to-scan: com.vueart.api.controller  # ??? ??? ??
-  api-docs:
-    groups:
-      enabled: true
-  cache:
-    disabled: true

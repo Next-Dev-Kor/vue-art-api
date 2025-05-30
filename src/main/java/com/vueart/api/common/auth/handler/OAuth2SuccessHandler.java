@@ -2,6 +2,7 @@ package com.vueart.api.common.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vueart.api.common.auth.dto.CustomOauth2UserDetails;
+import com.vueart.api.common.redis.RedisService;
 import com.vueart.api.common.response.CommonApiResponse;
 import com.vueart.api.common.util.ApiResponseUtil;
 import com.vueart.api.config.security.jwt.TokenProvider;
@@ -21,8 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
+    private final RedisService redisService;
     private final TokenProvider jwtTokenProvider;
-
     private final ApiResponseUtil apiResponseUtil;
 
     @Override
@@ -37,7 +38,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtTokenProvider.createAccessToken(userId, email, attributes);
         String refreshToken = jwtTokenProvider.createRefreshToken(userId, email);
 
-//        redisService.saveRefreshToken(userId, refreshToken);
+        redisService.saveRefreshToken(userId, refreshToken);
 
         // 응답 객체 생성
         Map<String, String> tokens = Map.of(
