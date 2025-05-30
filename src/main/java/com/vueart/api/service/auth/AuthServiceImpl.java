@@ -1,5 +1,6 @@
 package com.vueart.api.service.auth;
 
+import com.vueart.api.common.redis.RedisService;
 import com.vueart.api.common.util.AES256Util;
 import com.vueart.api.config.security.jwt.TokenProvider;
 import com.vueart.api.core.enums.Code;
@@ -23,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final AES256Util aes256Util;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -69,6 +71,8 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = tokenProvider.createAccessToken(user.getId(), user.getEmail(), null);
         String refreshToken = tokenProvider.createRefreshToken(user.getId(), user.getEmail());
+
+        redisService.saveRefreshToken(user.getId(), refreshToken);
 
         return new TokenDto(accessToken, refreshToken);
     }

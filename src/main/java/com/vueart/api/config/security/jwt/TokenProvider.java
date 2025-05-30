@@ -1,9 +1,9 @@
 package com.vueart.api.config.security.jwt;
 
-import com.vueart.api.common.util.ApiResponseUtil;
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.core.exception.CommonBadRequestException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +30,7 @@ public class TokenProvider {
     @Value("${jwt.refresh-token-expire-time}")
     private long refreshExpirationTime;
 
-    @Value("${jwt.secret}") //토큰 생성시 필요한 secretKey
+    @Value("${jwt.secret}")
     private String secretKey;
     private SecretKey key;
 
@@ -52,6 +52,8 @@ public class TokenProvider {
             claims.putAll(attributes);
         }
         return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer(issuer)
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessExpirationTime))
@@ -62,6 +64,7 @@ public class TokenProvider {
     public String createRefreshToken(Long userId, String email) {
         Date now = new Date();
         return Jwts.builder()
+                .setIssuer(issuer)
                 .setSubject(email)
                 .setId(String.valueOf(userId))
                 .setIssuedAt(now)
@@ -80,7 +83,10 @@ public class TokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
