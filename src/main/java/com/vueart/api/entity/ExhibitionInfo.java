@@ -64,4 +64,6 @@ public class ExhibitionInfo extends BaseEntity {
 
     @Column(name = "updated_dt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedDt;
+
+
 }
