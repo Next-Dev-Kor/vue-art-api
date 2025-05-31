@@ -15,6 +15,11 @@ public class Code {
         GOOGLE, KAKAO, NAVER
     }
 
+    public enum ReservationStatus {
+        CONFIRMED,
+        CANCELLED
+    }
+
     public enum BusinessRegisterType {
         VALID("01"),
         INVALID("02");
@@ -141,10 +146,14 @@ public class Code {
         NOT_FOUND_SUBSCRIBER_ID(404, "SUBSCRIBER_404", "해당 구독자를 찾을 수 없습니다."),
         NOT_FOUND_ORGANIZER_ID(404, "ORGANIZER_404", "해당 주최자를 찾을 수 없습니다."),
         NOT_FOUND_SUBSCRIPTION(404, "SUBSCRIPTION_404", "해당 구독을 찾을 수 없습니다."),
-        ALREADY_REGISTERED_SUBSCRIPTION(409, "SUBSCRIPTION_ALREADy_EXISTS", "이미 등록된 구독입니다."),
+        ALREADY_REGISTERED_SUBSCRIPTION(409, "SUBSCRIPTION_ALREADY_EXISTS", "이미 등록된 구독입니다."),
 
         // Notification
-        NOT_FOUND_NOTIFICATION(404, "NOTIFICATION_404", "알림을 찾을 수 없습니다.");
+        NOT_FOUND_NOTIFICATION(404, "NOTIFICATION_404", "알림을 찾을 수 없습니다."),
+
+        // Ticket
+        INSUFFICIENT_TICKET_QUANTITY(404, "TICKET_500", "잔여수량이 부족합니다.");
+
         private int status;
         private final String code;
         private final String message;

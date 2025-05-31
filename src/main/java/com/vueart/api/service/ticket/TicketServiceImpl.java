@@ -26,6 +26,7 @@ public class TicketServiceImpl implements TicketService {
                 .startDate(req.startDate())
                 .endDate(req.endDate())
                 .totalQuantity(req.totalQuantity())
+                .ticketInventory(req.totalQuantity())
                 .build();
 
         ticketRepository.save(ticket);

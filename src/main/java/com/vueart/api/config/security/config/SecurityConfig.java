@@ -50,6 +50,8 @@ public class SecurityConfig {
             "/api/category/**",
             "/api/subscriptions/**",
             "/api/notifications/**",
+            "/api/reservation/**",
+            "/api/ticket/**",
             "/oauth2/**",
             "/login/**",
             "/auth/login/kakao/**",
