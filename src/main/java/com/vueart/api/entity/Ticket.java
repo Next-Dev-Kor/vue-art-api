@@ -37,6 +37,26 @@ public class Ticket extends BaseEntity {
     @Column(name = "total_quantity", nullable = false)
     private Integer totalQuantity;
 
+    @Column(name = "ticket_inventory", nullable = false)
+    private Integer ticketInventory;
+
     @Column(name = "ticket_name", nullable = false)
     private String ticketName; // 원래 number였는데 문자열로 해석
+
+    // 예약 시 호출
+    public void reserve(int quantity) {
+        if (this.ticketInventory < quantity) {
+            throw new IllegalStateException("잔여 수량 부족");
+        }
+        this.ticketInventory -= quantity;
+    }
+
+    // 예약 취소 시 호출
+    public void cancelReservation(int quantity) {
+        if (this.ticketInventory < quantity) {
+            throw new IllegalStateException("예약 취소 수량 오류");
+        }
+        this.ticketInventory += quantity;
+    }
+
 }
