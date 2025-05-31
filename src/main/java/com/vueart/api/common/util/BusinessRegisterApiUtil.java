@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -30,6 +29,8 @@ public class BusinessRegisterApiUtil {
     private String serviceApi;
     @Value("${business.register.service.key}")
     private String serviceKey;
+
+    private static final String BUSINESS_STATUS_ENDPOINT = "/status?serviceKey=";
 
     public boolean getBusinessRegisterCheck(BusinessRegisterListDto req) {
         try {
@@ -50,7 +51,7 @@ public class BusinessRegisterApiUtil {
                     .toList();
 
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
-            String uriStr = serviceApi + "/status?serviceKey=" + encodedKey;
+            String uriStr = serviceApi + BUSINESS_STATUS_ENDPOINT + encodedKey;
             URI uri = URI.create(uriStr);
 
             ResponseEntity<Map<String, Object>> response = restClient.post()
@@ -60,7 +61,8 @@ public class BusinessRegisterApiUtil {
                     .onStatus(HttpStatusCode::is5xxServerError, (request, res) -> {
                         throw new VueArtApiException(Code.ErrorCode.INTERNAL_SERVER_ERROR);
                     })
-                    .toEntity(new ParameterizedTypeReference<>() {});
+                    .toEntity(new ParameterizedTypeReference<>() {
+                    });
 
             Map<String, Object> body = response.getBody();
             if (body == null || !body.containsKey("data")) return false;
