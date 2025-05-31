@@ -152,7 +152,10 @@ public class Code {
         NOT_FOUND_NOTIFICATION(404, "NOTIFICATION_404", "알림을 찾을 수 없습니다."),
 
         // Ticket
-        INSUFFICIENT_TICKET_QUANTITY(404, "TICKET_500", "잔여수량이 부족합니다.");
+        INSUFFICIENT_TICKET_QUANTITY(404, "TICKET_500", "잔여수량이 부족합니다."),
+
+        // Exhibition
+        NOT_FOUND_EXHIBITION(404, "EXHIBITION_404", "전시회를 찾을 수 없습니다.");
 
         private int status;
         private final String code;
