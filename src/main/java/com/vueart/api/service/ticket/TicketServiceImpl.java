@@ -1,8 +1,12 @@
 package com.vueart.api.service.ticket;
 
+import com.vueart.api.core.enums.Code;
+import com.vueart.api.core.exception.VueArtApiException;
 import com.vueart.api.dto.request.ticket.TicketRequest;
 import com.vueart.api.dto.response.ticket.TicketResponse;
+import com.vueart.api.entity.ExhibitionInfo;
 import com.vueart.api.entity.Ticket;
+import com.vueart.api.repository.exhibitioninfo.ExhibitionInfoRepository;
 import com.vueart.api.repository.ticket.TicketRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -15,10 +19,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
+    private final ExhibitionInfoRepository exhibitionInfoRepository;
 
     @Override
     @Transactional
     public void createTicket(TicketRequest req) {
+        System.out.println("ticket debug");
+
+        // 🟢 exhibitionId로 엔티티 조회
+        ExhibitionInfo exhibitionInfo = exhibitionInfoRepository.findById(req.exhibitionId().longValue())
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_EXHIBITION));
 
         Ticket ticket = Ticket.builder()
                 .ticketName(req.ticketName())
@@ -26,6 +36,8 @@ public class TicketServiceImpl implements TicketService {
                 .startDate(req.startDate())
                 .endDate(req.endDate())
                 .totalQuantity(req.totalQuantity())
+                .ticketInventory(req.totalQuantity())
+                .exhibitionInfo(exhibitionInfo)
                 .build();
 
         ticketRepository.save(ticket);
