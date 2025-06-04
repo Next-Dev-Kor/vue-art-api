@@ -2,7 +2,14 @@ package com.vueart.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vueart.api.core.enums.Code;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +22,9 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {
-    @Id  // Primary Key 지정
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")  // 컬럼 지정
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "user_id", unique = true)
