@@ -11,12 +11,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Getter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // JPA에서 lazy관련 에러 날 경우 사용
-@Entity  // 객체와 테이블 매핑
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Entity
 @Table(name = "users")
 public class User extends BaseEntity {
     @Id  // Primary Key 지정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // AUTO_INCREMENT 설정 (id값이 null일 경우 자동 생성)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")  // 컬럼 지정
     private Long id;
 
