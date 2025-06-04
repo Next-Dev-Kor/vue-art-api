@@ -1,6 +1,6 @@
 package com.vueart.api.config.security.jwt;
 
-import com.vueart.api.common.auth.dto.CustomOauth2UserDetails;
+import com.vueart.api.common.auth.dto.CustomUserDetails;
 import com.vueart.api.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,12 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-//        if (redisService.checkBlackList(token)) {
-//            log.debug("JWT token is blacklisted");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            return;
-//        }
-
         if (jwtTokenProvider.validateToken(token)) {
             log.debug("JWT token validated");
             User user;
@@ -49,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = jwtTokenProvider.getEmailFromToken(token);
 
             Map<String, Object> attributes = jwtTokenProvider.getAttributesFromToken(token);
-            CustomOauth2UserDetails userDetails;
+            CustomUserDetails userDetails;
             if (attributes != null && !attributes.isEmpty()) {
                 String name = "Unknown User";
                 if (attributes.containsKey("kakao_account")) {
@@ -65,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     name = attributes.get("name").toString();
                 }
 
-                userDetails = new CustomOauth2UserDetails(User.builder()
+                userDetails = new CustomUserDetails(User.builder()
                         .id(userId)
                         .email(email)
                         .userName(name)
@@ -75,7 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .id(userId)
                         .email(email)
                         .build();
-                userDetails = new CustomOauth2UserDetails(
+                userDetails = new CustomUserDetails(
                         user,
                         attributes != null ? attributes : Collections.emptyMap()
                 );
