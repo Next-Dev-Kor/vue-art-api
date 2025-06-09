@@ -29,7 +29,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void reserve(Long userId, Long ticketId, int quantity) {
+    public void processReservation(Long userId, Long ticketId, int quantity) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다"));
         Ticket ticket = ticketRepository.findById(ticketId)
@@ -51,9 +52,10 @@ public class ReservationServiceImpl implements ReservationService {
                 .status(Code.ReservationStatus.CONFIRMED)
                 .build();
 
+        // 클라이언트가 예약 요청하면, 바로 DB에 예약 처리하고 응답을 줌.
+        // Producer : 예약 요청은 메시지로 변환해서 RabbitMQ 큐에 보냄
+        // Consumer : 큐에서 메시지를 받아 실제 예약 처리를 수행
         reservationRepository.save(reservation);
-
-
     }
 
     @Transactional
@@ -64,6 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.cancel();
         reservation.getTicket().cancelReservation(reservation.getBoughtQuantity());
     }
+
 
     @Transactional()
     public List<Reservation> getUserReservations(Long userId) {

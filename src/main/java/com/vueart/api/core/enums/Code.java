@@ -60,6 +60,7 @@ public class Code {
         CREATED_EXHIBITION_INFO(201, "S004", "전시회 정보가 등록되었습니다."),
         CREATED_TICKET(201, "S005", "티켓 정보가 등록되었습니다."),
         UPDATED_EXHIBITION_INFO(201, "S005", "전시회 정보가 수정되었습니다."),
+        SUCCESS_RESERVE(200, "S006", "티켓 예매에 성공했습니다."),
         ;
         private int status;
         private final String code;

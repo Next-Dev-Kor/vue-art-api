@@ -2,8 +2,10 @@ package com.vueart.api.controller;
 
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
+import com.vueart.api.dto.messaging.ReservationMessage;
 import com.vueart.api.dto.request.reservation.ReservationRequest;
 import com.vueart.api.dto.response.reservation.ReservationResponse;
+import com.vueart.api.producer.ReservationProducer;
 import com.vueart.api.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +19,12 @@ import java.util.stream.Collectors;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReservationProducer reservationProducer;
 
     @PostMapping
-    public SuccessResponse reserve(@RequestBody ReservationRequest request) {
-        reservationService.reserve(request.getUserId(), request.getTicketId(), request.getBoughtQuantity());
-        return new SuccessResponse(Code.ApiResponseCode.CREATED_EXHIBITION_INFO.getMessage());
+    public SuccessResponse reserve(@RequestBody ReservationMessage msg) {
+        reservationProducer.sendReservationMessage(msg);
+        return new SuccessResponse(Code.ApiResponseCode.SUCCESS_RESERVE.getMessage());
     }
 
     @PostMapping("/{reservationId}/cancel")

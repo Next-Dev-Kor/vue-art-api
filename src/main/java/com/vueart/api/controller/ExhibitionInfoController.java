@@ -36,6 +36,7 @@ public class ExhibitionInfoController {
     })
     @PostMapping("/exhibition-info")
     public SuccessResponse createExhibitionInfo(Authentication authentication, @RequestBody ExhibitionInfoRequest req) {
+        System.out.println("$$$$$$$$$$$$$$");
         exhibitionInfoService.createExhibitionInfo(req);
         return new SuccessResponse(Code.ApiResponseCode.CREATED_EXHIBITION_INFO.getMessage());
     }

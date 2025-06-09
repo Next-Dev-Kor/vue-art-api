@@ -46,6 +46,13 @@ spring:
       jdbc: off
       sqltiming: debug
 
+  # rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
   config:
     import: optional:file:.env.${spring.profiles.active}[.properties]
   profiles:
@@ -65,6 +72,11 @@ business:
     service:
       api: ${BUSINESS_REGISTER_API}
       key: ${BUSINESS_REGISTER_SERVICE_KEY}
+
+reservation:
+  queue: reservationQueue
+  exchange: reservationExchange
+  routingKey: reservationKey
 
 #logging
 logging:

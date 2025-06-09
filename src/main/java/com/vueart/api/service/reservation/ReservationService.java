@@ -7,5 +7,6 @@ import java.util.List;
 public interface ReservationService {
     public List<Reservation> getUserReservations(Long userId);
     public void cancelReservation(Long reservationId);
-    public void reserve(Long userId, Long ticketId, int quantity);
+
+    public void processReservation(Long userId, Long ticketId, int quantity);
 }
