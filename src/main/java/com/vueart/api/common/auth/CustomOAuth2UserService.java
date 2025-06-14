@@ -1,6 +1,6 @@
 package com.vueart.api.common.auth;
 
-import com.vueart.api.common.auth.dto.CustomOauth2UserDetails;
+import com.vueart.api.common.auth.dto.CustomUserDetails;
 import com.vueart.api.common.auth.dto.GoogleUserDetails;
 import com.vueart.api.common.auth.dto.KakaoUserDetails;
 import com.vueart.api.common.auth.dto.OAuth2UserInfo;
@@ -70,6 +70,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             log.info("기존 사용자 로그인: {}", user.getEmail());
         }
 
-        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
+        return new CustomUserDetails(user, oAuth2User.getAttributes());
     }
 }

@@ -1,5 +1,6 @@
 package com.vueart.api.service.user;
 
+import com.vueart.api.common.auth.dto.CustomUserDetails;
 import com.vueart.api.common.util.AES256Util;
 import com.vueart.api.common.util.BusinessRegisterApiUtil;
 import com.vueart.api.core.enums.Code;
@@ -57,7 +58,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isBusinessRegistered(BusinessRegisterListDto req) {
-        return businessRegisterApiUtil.getBusinessRegisterCheck(req);
+    public boolean isBusinessRegistered(BusinessRegisterListDto req, CustomUserDetails userDetails) {
+        User user = userRepository.findById(userDetails.getUserId())
+                .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID));
+
+        boolean businessYn = businessRegisterApiUtil.getBusinessRegisterCheck(req);
+
+        if (businessYn) {
+            user = user.toBuilder()
+                    .business(Code.YN.Y)
+                    .build();
+            userRepository.save(user);
+        }
+
+        return businessYn;
     }
 }
