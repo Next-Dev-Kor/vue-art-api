@@ -1,7 +1,7 @@
 package com.vueart.api.common.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vueart.api.common.auth.dto.CustomOauth2UserDetails;
+import com.vueart.api.common.auth.dto.CustomUserDetails;
 import com.vueart.api.common.redis.RedisService;
 import com.vueart.api.common.response.CommonApiResponse;
 import com.vueart.api.common.util.ApiResponseUtil;
@@ -24,12 +24,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final RedisService redisService;
     private final TokenProvider jwtTokenProvider;
-    private final ApiResponseUtil apiResponseUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        CustomOauth2UserDetails userDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         Long userId = userDetails.getUserId();
         String email = userDetails.getEmail();
@@ -45,7 +44,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 "accessToken", accessToken,
                 "refreshToken", refreshToken
         );
-        CommonApiResponse<Map<String, String>> successResponse = apiResponseUtil.success(tokens);
+        CommonApiResponse<Map<String, String>> successResponse = ApiResponseUtil.success(tokens);
 
         // 응답 작성
         response.setContentType("application/json");

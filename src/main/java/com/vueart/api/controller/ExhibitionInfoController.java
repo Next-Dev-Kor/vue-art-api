@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/exhibition")
+@RequestMapping("/api/exhibitions")
 @Slf4j
 @Tag(name = "Exhibition", description = "전시회 정보 관련 API")
 public class ExhibitionInfoController {
@@ -34,7 +34,7 @@ public class ExhibitionInfoController {
             @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
-    @PostMapping("/exhibition-info")
+    @PostMapping
     public SuccessResponse createExhibitionInfo(Authentication authentication, @RequestBody ExhibitionInfoRequest req) {
         System.out.println("$$$$$$$$$$$$$$");
         exhibitionInfoService.createExhibitionInfo(req);
@@ -51,7 +51,8 @@ public class ExhibitionInfoController {
             @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
-    @PutMapping("/exhibition-info/{id}")
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public SuccessResponse updateExhibitionInfo(Authentication authentication, @PathVariable Long id, @RequestBody ExhibitionInfoRequest req) {
         exhibitionInfoService.updateExhibitionInfo(id, req);
         return new SuccessResponse(Code.ApiResponseCode.UPDATED_EXHIBITION_INFO.getMessage());
