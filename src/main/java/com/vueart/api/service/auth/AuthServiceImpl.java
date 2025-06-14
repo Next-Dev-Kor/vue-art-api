@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         boolean isValidPass = true;
         User user = userRepository.findByUserId(req.userId())
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_REGISTERED_USER));
-
+        System.out.print("debug");
         try { // 패스워드 암호화 위변조 체크
             decPassword = aes256Util.decode(req.password());
             log.info("decPassword = > {}", decPassword);

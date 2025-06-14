@@ -1,6 +1,14 @@
 package com.vueart.api.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +22,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
 public class Ticket extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +44,26 @@ public class Ticket extends BaseEntity {
     @Column(name = "total_quantity", nullable = false)
     private Integer totalQuantity;
 
+    @Column(name = "ticket_inventory", nullable = false)
+    private Integer ticketInventory;
+
     @Column(name = "ticket_name", nullable = false)
     private String ticketName; // 원래 number였는데 문자열로 해석
+
+    // 예약 시 호출
+    public void reserve(int quantity) {
+        if (this.ticketInventory < quantity) {
+            throw new IllegalStateException("잔여 수량 부족");
+        }
+        this.ticketInventory -= quantity;
+    }
+
+    // 예약 취소 시 호출
+    public void cancelReservation(int quantity) {
+        if (this.ticketInventory < quantity) {
+            throw new IllegalStateException("예약 취소 수량 오류");
+        }
+        this.ticketInventory += quantity;
+    }
+
 }

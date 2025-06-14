@@ -1,5 +1,6 @@
 package com.vueart.api.controller;
 
+import com.vueart.api.common.auth.dto.CustomUserDetails;
 import com.vueart.api.common.response.CommonApiResponse;
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
@@ -13,7 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class UserController {
 
     @Operation(
             summary = "유저",
-            description = "사업자 번호"
+            description = "등록번호 유효성을 검사하고 유저의 business_yn 상태를 변경"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
@@ -36,10 +37,9 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/business-register-check")
-    public CommonApiResponse<Boolean> isBusinessRegistered(@RequestBody BusinessRegisterListDto req) {
-        boolean bool = userService.isBusinessRegistered(req);
+    @PostMapping("/business-register")
+    public CommonApiResponse<Boolean> isBusinessRegistered(@RequestBody BusinessRegisterListDto req, Authentication authentication) {
+        boolean bool = userService.isBusinessRegistered(req, (CustomUserDetails) authentication.getPrincipal());
         return new CommonApiResponse<>(HttpStatus.OK.value(), Code.ApiResponseCode.SUCCESS.getCode(), bool);
     }
 }

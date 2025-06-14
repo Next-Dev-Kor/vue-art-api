@@ -5,16 +5,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
+public class CustomUserDetails implements UserDetails, OAuth2User, Serializable {
+    private static final long serialVersionUID = 1905122041950251207L;
 
     private final User user;
-    private Map<String, Object> attributes;
+    private transient Map<String, Object> attributes;
 
-    public CustomOauth2UserDetails(User user, Map<String, Object> attributes) {
+    public CustomUserDetails(User user, Map<String, Object> attributes) {
         this.user = user;
         this.attributes = attributes;
     }
