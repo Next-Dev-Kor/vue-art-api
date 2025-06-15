@@ -1,6 +1,7 @@
 package com.vueart.api.service.subscription;
 
 import com.vueart.api.dto.request.subcription.SubscribeRequest;
+import com.vueart.api.dto.response.subscription.SubscriptionResponse;
 import com.vueart.api.entity.Subscription;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,5 +14,5 @@ public interface SubscriptionService {
     @Transactional
     void unsubscribe(Long subscriberId, Long organizerId);
 
-    List<Subscription> getSubscriptions(Long subscriberId);
+    List<SubscriptionResponse> getSubscriptions(Long subscriberId);
 }

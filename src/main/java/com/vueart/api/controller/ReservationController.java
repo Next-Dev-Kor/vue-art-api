@@ -1,5 +1,6 @@
 package com.vueart.api.controller;
 
+import com.vueart.api.common.response.CommonApiResponse;
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.dto.messaging.ReservationMessage;
@@ -8,6 +9,7 @@ import com.vueart.api.dto.response.reservation.ReservationResponse;
 import com.vueart.api.producer.ReservationProducer;
 import com.vueart.api.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +35,8 @@ public class ReservationController {
         return new SuccessResponse(Code.ApiResponseCode.CREATED_EXHIBITION_INFO.getMessage());
     }
 
-    public List<ReservationResponse> getUserReservations(@RequestParam Long userId) {
-        return reservationService.getUserReservations(userId).stream()
+    public CommonApiResponse<List<ReservationResponse>> getUserReservations(@RequestParam Long userId) {
+        List<ReservationResponse> reservationResponse = reservationService.getUserReservations(userId).stream()
                 .map(reservation -> ReservationResponse.builder()
                         .reservationId(reservation.getId())
                         .ticketId(reservation.getTicket().getId())
@@ -45,7 +47,8 @@ public class ReservationController {
                         .reservedDate(reservation.getReservedDate())
                         .build()
                 )
-                .collect(Collectors.toList());
+                .toList();
+        return new CommonApiResponse<>(HttpStatus.OK.value(), Code.ApiResponseCode.SUCCESS.getCode(), reservationResponse);
     }
 }
 

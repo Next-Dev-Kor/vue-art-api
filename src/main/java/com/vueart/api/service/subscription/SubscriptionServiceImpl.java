@@ -3,6 +3,7 @@ package com.vueart.api.service.subscription;
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.core.exception.VueArtApiException;
 import com.vueart.api.dto.request.subcription.SubscribeRequest;
+import com.vueart.api.dto.response.subscription.SubscriptionResponse;
 import com.vueart.api.entity.Subscription;
 import com.vueart.api.entity.User;
 import com.vueart.api.repository.subscription.SubscriptionRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,10 +63,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<Subscription> getSubscriptions(Long subscriberId) {
+    public List<SubscriptionResponse> getSubscriptions(Long subscriberId) {
 
         User subscriber = userRepository.findById(subscriberId)
                 .orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_SUBSCRIBER_ID));
-        return subscriptionRepository.findBySubscriberId(subscriber.getId());
+        List<Subscription> subscriptions = subscriptionRepository.findBySubscriberId(subscriber.getId());
+        return subscriptions.stream()
+                .map(subscription -> SubscriptionResponse.builder()
+                        .organizerId(subscription.getOrganizer().getId())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

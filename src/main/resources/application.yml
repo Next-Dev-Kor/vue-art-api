@@ -74,9 +74,9 @@ business:
       key: ${BUSINESS_REGISTER_SERVICE_KEY}
 
 reservation:
-  queue: reservationQueue
-  exchange: reservationExchange
-  routingKey: reservationKey
+  queue: reservation.queue
+  exchange: reservation.exchange
+  routingKey: reservation.routingKey
 
 #logging
 logging:

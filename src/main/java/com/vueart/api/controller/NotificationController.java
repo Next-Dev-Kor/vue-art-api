@@ -1,9 +1,13 @@
 package com.vueart.api.controller;
 
-import com.vueart.api.entity.Notification;
+import com.vueart.api.common.response.CommonApiResponse;
+import com.vueart.api.common.response.SuccessResponse;
+import com.vueart.api.core.enums.Code;
+import com.vueart.api.dto.response.notification.NotificationResponse;
 import com.vueart.api.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +21,21 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    public List<String> getNotifications(@RequestParam Long userId,
+    public CommonApiResponse<List<NotificationResponse>> getNotifications(@RequestParam Long userId,
                                                @RequestParam(defaultValue = "false") boolean onlyUnread) {
-        return notificationService.getNotifications(userId, onlyUnread);
+        List<NotificationResponse> notificationResponse = notificationService.getNotifications(userId, onlyUnread);
+        return new CommonApiResponse<>(HttpStatus.OK.value(), Code.ApiResponseCode.SUCCESS.getCode(), notificationResponse);
     }
 
     @PatchMapping("/{id}/read")
-    public void markAsRead(@PathVariable("id") Long notificationId) {
+    public SuccessResponse markAsRead(@PathVariable("id") Long notificationId) {
         notificationService.markAsRead(notificationId);
+        return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
     }
 
     @PatchMapping("/read-all")
-    public void markAllAsRead(@RequestParam Long userId) {
+    public SuccessResponse markAllAsRead(@RequestParam Long userId) {
         notificationService.markAllAsRead(userId);
+        return new SuccessResponse(Code.ApiResponseCode.SUCCESS.getMessage());
     }
 }

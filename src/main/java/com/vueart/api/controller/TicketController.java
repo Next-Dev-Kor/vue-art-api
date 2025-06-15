@@ -1,5 +1,6 @@
 package com.vueart.api.controller;
 
+import com.vueart.api.common.response.CommonApiResponse;
 import com.vueart.api.common.response.SuccessResponse;
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.dto.request.ticket.TicketRequest;
@@ -9,6 +10,7 @@ import com.vueart.api.service.ticket.TicketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,8 +28,9 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public TicketResponse getTicketById(@PathVariable Long id) {
-        return ticketService.getTicketById(id);
+    public CommonApiResponse<TicketResponse> getTicketById(@PathVariable Long id) {
+        TicketResponse ticketResponse =  ticketService.getTicketById(id);
+        return new CommonApiResponse<>(HttpStatus.OK.value(), Code.ApiResponseCode.SUCCESS.getCode(), ticketResponse);
     }
 
 }

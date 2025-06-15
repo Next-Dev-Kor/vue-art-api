@@ -2,6 +2,7 @@ package com.vueart.api.service.notification;
 
 import com.vueart.api.core.enums.Code;
 import com.vueart.api.core.exception.VueArtApiException;
+import com.vueart.api.dto.response.notification.NotificationResponse;
 import com.vueart.api.entity.User;
 import com.vueart.api.repository.category.CategoryRepository;
 import com.vueart.api.repository.notification.NotificationRepository;
@@ -23,7 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<String> getNotifications(Long userId, boolean onlyUnread) {
+    public List<NotificationResponse> getNotifications(Long userId, boolean onlyUnread) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new VueArtApiException(Code.ErrorCode.NOT_FOUND_USER_ID));
         List<Notification> notifications;
@@ -34,9 +35,14 @@ public class NotificationServiceImpl implements NotificationService {
         notifications = notificationRepository.findByUser_Id(userId);
 
         return notifications.stream()
-                .map(Notification::getMessage) // 각 Notification에서 message만 추출
+                .map(notification -> new NotificationResponse(
+                        notification.getId(),
+                        notification.getMessage(),
+                        notification.isRead(),
+                        notification.getCreatedAt()
+                ))
                 .collect(Collectors.toList());
-    }
+}
 
 
     @Transactional
